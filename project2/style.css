@@ -1,0 +1,58 @@
+/* General Form Styling */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+/* Form Field Styling */
+form input, form select, form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Text Area Styling */
+form textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+/* Label Styling */
+form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Button Styling */
+form button {
+  width: 48%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+form button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+form button[type="reset"] {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Button Hover Effect */
+form button:hover {
+  opacity: 0.9;
+}
