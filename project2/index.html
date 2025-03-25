@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <script>
+        // Function to validate the form
+        function validateForm(event) {
+            event.preventDefault(); // Prevent default form submission
+            let errors = [];
+
+            // Validate Name Fields
+            let firstName = document.getElementById("first-name").value.trim();
+            let lastName = document.getElementById("last-name").value.trim();
+            if (!firstName.match(/^[a-zA-Z]+$/)) errors.push("First name is required and must be alphabetic.");
+            if (!lastName.match(/^[a-zA-Z]+$/)) errors.push("Last name is required and must be alphabetic.");
+
+            // Validate Address Fields
+            let address = document.getElementById("address").value.trim();
+            let city = document.getElementById("city").value.trim();
+            let state = document.getElementById("state").value;
+            let zip = document.getElementById("zip").value.trim();
+            if (!address.match(/^[a-zA-Z0-9 ]+$/)) errors.push("Address is required and must be alphanumeric.");
+            if (!city.match(/^[a-zA-Z]+$/)) errors.push("City is required and must be alphabetic.");
+            if (!zip.match(/^\d{5}$/)) errors.push("Zip code must be numeric and 5 digits.");
+            if (state === "") errors.push("You must select a state.");
+
+            // Validate Phone Number
+            let areaCode = document.getElementById("area-code").value.trim();
+            let phoneNumber = document.getElementById("phone-number").value.trim();
+            if (!areaCode.match(/^\d{3}$/)) errors.push("Area code must be 3 digits.");
+            if (!phoneNumber.match(/^\d{7}$/)) errors.push("Phone number must be 7 digits.");
+
+            // Validate Email Addresses
+            let email = document.getElementById("email").value.trim();
+            let confirmEmail = document.getElementById("confirm-email").value.trim();
+            if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) errors.push("Invalid email format.");
+            if (email !== confirmEmail) errors.push("Email and Confirm Email must match.");
+
+            // Validate Meal Preference
+            let mealSelected = document.querySelector('input[name="meal"]:checked');
+            if (!mealSelected) errors.push("You must select a meal preference.");
+
+            // Validate Contact Methods
+            let contactMethods = document.querySelectorAll('input[name="contact"]:checked');
+            if (contactMethods.length < 2) errors.push("You must select at least two contact methods.");
+
+            // Show Errors or Submit Form
+            if (errors.length > 0) {
+                alert(errors.join("\n"));
+            } else {
+                alert("Form submitted successfully!");
+                // Here you could implement sending form data to an email using a server-side script like PHP
+            }
+        }
+
+        // Function to reset the form
+        function resetForm() {
+            document.getElementById("registration-form").reset();
+        }
+    </script>
+</head>
+<body>
+    <h1>Registration Form</h1>
+    <form id="registration-form" onsubmit="validateForm(event)">
+        <!-- Name Section -->
+        <label for="first-name">First Name:</label>
+        <input type="text" id="first-name" placeholder="Enter First Name" required>
+        <label for="last-name">Last Name:</label>
+        <input type="text" id="last-name" placeholder="Enter Last Name" required>
+
+        <!-- Address Section -->
+        <label for="address">Address:</label>
+        <input type="text" id="address" placeholder="Enter Address" required>
+        <label for="city">City:</label>
+        <input type="text" id="city" placeholder="Enter City" required>
+        <label for="state">State:</label>
+        <select id="state" required>
+            <option value="">Select State</option>
+            <option value="NY">New York</option>
+            <option value="CA">California</option>
+            <option value="TX">Texas</option>
+            <!-- Add more states as needed -->
+        </select>
+        <label for="zip">Zip Code:</label>
+        <input type="text" id="zip" placeholder="Enter Zip Code" required>
+
+        <!-- Phone Number Section -->
+        <label for="area-code">Area Code:</label>
+        <input type="text" id="area-code" placeholder="Area Code" required>
+        <label for="phone-number">Phone Number:</label>
+        <input type="text" id="phone-number" placeholder="Phone Number" required>
+
+        <!-- Email Section -->
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" placeholder="Enter E-mail" required>
+        <label for="confirm-email">Confirm E-mail:</label>
+        <input type="email" id="confirm-email" placeholder="Confirm E-mail" required>
+
+        <!-- Meal Preference Section -->
+        <p>Meal Preference:</p>
+        <input type="radio" id="vegan" name="meal" value="Vegan">
+        <label for="vegan">Vegan</label>
+        <input type="radio" id="vegetarian" name="meal" value="Vegetarian">
+        <label for="vegetarian">Vegetarian</label>
+        <input type="radio" id="non-vegetarian" name="meal" value="Non-Vegetarian">
+        <label for="non-vegetarian">Non-Vegetarian</label>
+
+        <!-- Contact Method Section -->
+        <p>Contact Method:</p>
+        <input type="checkbox" id="contact-phone" name="contact" value="Phone">
+        <label for="contact-phone">Phone</label>
+        <input type="checkbox" id="contact-email" name="contact" value="E-mail">
+        <label for="contact-email">E-mail</label>
+        <input type="checkbox" id="contact-mail" name="contact" value="Mail">
+        <label for="contact-mail">Mail</label>
+        <input type="checkbox" id="contact-linkedin" name="contact" value="LinkedIn">
+        <label for="contact-linkedin">LinkedIn</label>
+
+        <!-- Comments Section -->
+        <label for="comments">Comments (Optional):</label>
+        <textarea id="comments" placeholder="Enter your comments here..." maxlength="250"></textarea>
+
+        <!-- Buttons -->
+        <button type="submit">Submit</button>
+        <button type="button" onclick="resetForm()">Reset</button>
+    </form>
+</body>
+</html>
