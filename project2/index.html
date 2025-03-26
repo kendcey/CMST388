@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validated Input Form</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Add Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+</head>
+      
+      
+<body>
+  <div class="form-container">
+    <img src="logo.svg" alt="Company Logo" style="width: 100px; margin-bottom: 20px;">
+    <h1>Registration Form</h1>
+    <form id="userForm">
+      <!-- Name Section -->
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" placeholder="Enter First Name">
+        <div class="error" id="firstNameError"></div>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" placeholder="Enter Last Name">
+        <div class="error" id="lastNameError"></div>
+      </div>
+      <br>
+
+      <!-- Address Section -->
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" id="address" placeholder="Street Address">
+        <div class="error" id="addressError"></div>
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="City">
+        <div class="error" id="cityError"></div>
+      </div>
+
+      <div class="form-group state-zip-group">
+        <div class = "field-group">
+            <label for="state">State</label>
+            <select id="state">
+                <option value="">Select a State</option>
+                <option value="NY">New York</option>
+                <option value="CA">California</option>
+                <option value="TX">Texas</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label for="zip">Zip Code</label>
+            <input type="text" id="zip" placeholder="Zip Code">
+        </div>
+    </div>
+    
+      <br>
+
+      <!-- Phone Number Section -->
+      <div class="form-group phone-number-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" id="areaCode" placeholder="Area Code">
+        <input type="text" id="phoneNumber" placeholder="Phone Number">
+        <div class="error" id="areaCodeError"></div>
+        <div class="error" id="phoneNumberError"></div>
+      </div>
+    
+      <!-- Email Section -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="example@example.com">
+        <div class="error" id="emailError"></div>
+      </div>
+      <div class="form-group">
+        <label for="confirmEmail">Confirm Email</label>
+        <input type="email" id="confirmEmail" placeholder="example@example.com">
+        <div class="error" id="confirmEmailError"></div>
+      </div>
+
+      <br>
+      <!-- Meal Preference -->
+      <div class="form-group">
+        <label>Meal Preference</label>
+        <label><input type="radio" name="meal" value="Vegan"> Vegan</label>
+        <label><input type="radio" name="meal" value="Vegetarian"> Vegetarian</label>
+        <label><input type="radio" name="meal" value="Non-Vegetarian"> Non-Vegetarian</label>
+        <div class="error" id="mealError"></div>
+      </div>
+
+      <!-- Contact Method -->
+      <div class="form-group">
+        <label>Contact Method (Select more than one)</label>
+        <label><input type="checkbox" name="contactMethod" value="Phone"> Phone</label>
+        <label><input type="checkbox" name="contactMethod" value="Email"> Email</label>
+        <label><input type="checkbox" name="contactMethod" value="SMS"> SMS</label>
+        <label><input type="checkbox" name="contactMethod" value="Mail"> Mail</label>
+        <div class="error" id="contactMethodError"></div>
+      </div>
+      <br>
+
+      <!-- Comments -->
+      <div class="form-group">
+        <label for="comments">Comments</label>
+        <textarea id="comments" maxlength="250" placeholder="Enter your comments here"></textarea>
+      </div>
+      <br>
+
+      <!-- Buttons -->
+      <div class="form-group">
+        <button type="submit" onclick="submitForm()">Submit</button>
+        <button type="reset" onclick="resetForm()">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
