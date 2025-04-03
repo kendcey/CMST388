@@ -1,125 +1,270 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const $ = (id) => document.getElementById(id); // Helper function for selecting elements
+document.addEventListener("DOMContentLoaded", function() {
+  // Helper function to get elements by ID
+  const $ = function(id) {
+    return document.getElementById(id);
+  };
+
+  // Form and notification elements
   const form = $("userForm");
   const notification = $("notification");
 
-  // Show notification
-  const showNotification = (message, isSuccess) => {
+  // Show notification message
+  const showNotification = function(message, isSuccess) {
     notification.textContent = message;
     notification.className = isSuccess ? "notification success" : "notification error";
     notification.style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Clear notification
-  const clearNotification = () => {
+  const clearNotification = function() {
     notification.style.display = "none";
   };
 
-  // Real-time validation function
-  const addFieldValidation = (id, regex, errorId, baseErrorMsg, formatErrorMsg) => {
-    const inputElement = $(id);
-    const errorElement = $(errorId);
+  // Validate email format
+  const validateEmail = function(email) {
+    return /^[^\s@]{1,64}@[^\s@]{1,252}\.[^\s@]{2,}$/.test(email);
+  };
 
-    if (!inputElement || !errorElement) {
-      console.error(`Element with ID "${id}" or error element "${errorId}" is missing.`);
-      return; // Gracefully exit if IDs don't match
+  // Validate email confirmation
+  const validateEmailConfirmation = function() {
+    const email = $("email").value.trim();
+    const confirmEmail = $("confirmEmail").value.trim();
+    const error = $("confirmEmailError");
+    
+    if (confirmEmail === "") {
+      error.textContent = "Confirm Email is required";
+      $("confirmEmail").classList.add("invalid");
+      return false;
+    } else if (email !== confirmEmail) {
+      error.textContent = "Emails must match";
+      $("confirmEmail").classList.add("invalid");
+      return false;
+    } else {
+      error.textContent = "";
+      $("confirmEmail").classList.remove("invalid");
+      return true;
     }
+  };
 
-    inputElement.addEventListener("input", () => {
-      const value = inputElement.value.trim();
-      if (value === "") {
-        errorElement.innerText = baseErrorMsg;
-        inputElement.classList.remove("valid");
-        inputElement.classList.add("invalid");
-      } else if (!regex.test(value)) {
-        errorElement.innerText = formatErrorMsg;
-        inputElement.classList.remove("valid");
-        inputElement.classList.add("invalid");
+  // Validate phone number
+  const validatePhone = function() {
+    const areaCode = $("areaCode").value;
+    const phoneNumber = $("phoneNumber").value;
+    const areaCodeError = $("areaCodeError");
+    const phoneNumberError = $("phoneNumberError");
+    let isValid = true;
+    
+    if (areaCode.length !== 3) {
+      areaCodeError.textContent = "Area code must be 3 digits";
+      $("areaCode").classList.add("invalid");
+      isValid = false;
+    } else {
+      areaCodeError.textContent = "";
+      $("areaCode").classList.remove("invalid");
+    }
+    
+    if (phoneNumber.length !== 7) {
+      phoneNumberError.textContent = "Phone number must be 7 digits";
+      $("phoneNumber").classList.add("invalid");
+      isValid = false;
+    } else {
+      phoneNumberError.textContent = "";
+      $("phoneNumber").classList.remove("invalid");
+    }
+    
+    return isValid;
+  };
+
+  // Set up input validation for different field types
+  const setupValidation = function() {
+    // Name fields - letters only
+    const setupNameValidation = function(fieldId, errorId) {
+      const field = $(fieldId);
+      const error = $(errorId);
+      
+      field.addEventListener("input", function(e) {
+        const key = e.data;
+        const original = this.value;
+        
+        // Prevent invalid characters
+        this.value = this.value.replace(/[^A-Za-z]/g, "");
+        
+        // Show error if invalid key was pressed
+        if (key && /[^A-Za-z]/.test(key)) {
+          error.textContent = "Only letters allowed";
+          this.classList.add("invalid");
+          setTimeout(() => {
+            if (/^[A-Za-z]*$/.test(this.value)) {
+              error.textContent = "";
+              this.classList.remove("invalid");
+            }
+          }, 1000);
+        }
+      });
+    };
+
+    setupNameValidation("firstName", "firstNameError");
+    setupNameValidation("lastName", "lastNameError");
+
+    // City - letters and spaces only
+    $("city").addEventListener("input", function(e) {
+      const key = e.data;
+      const original = this.value;
+      
+      this.value = this.value.replace(/[^A-Za-z\s]/g, "");
+      
+      if (key && /[^A-Za-z\s]/.test(key)) {
+        $("cityError").textContent = "Only letters and spaces allowed";
+        this.classList.add("invalid");
+        setTimeout(() => {
+          if (/^[A-Za-z\s]*$/.test(this.value)) {
+            $("cityError").textContent = "";
+            this.classList.remove("invalid");
+          }
+        }, 1000);
+      }
+    });
+
+    // ZIP - numbers only (strictly 5 digits)
+    $("zip").addEventListener("input", function(e) {
+      const key = e.data;
+      
+      // Prevent non-digits and limit to 5 characters
+      this.value = this.value.replace(/\D/g, "").slice(0, 5);
+      
+      if (key && /\D/.test(key)) {
+        $("zipError").textContent = "Only numbers allowed";
+        this.classList.add("invalid");
+        setTimeout(() => {
+          $("zipError").textContent = "";
+          this.classList.remove("invalid");
+        }, 1000);
+      }
+      
+      // Show error if trying to type beyond 5 digits
+      if (this.value.length > 5) {
+        this.value = this.value.slice(0, 5);
+      }
+    });
+
+    // Phone number parts
+    const setupPhonePartValidation = function(fieldId, errorId, maxLength) {
+      const field = $(fieldId);
+      const error = $(errorId);
+      
+      field.addEventListener("input", function(e) {
+        const key = e.data;
+        
+        // Prevent non-digits and enforce max length
+        this.value = this.value.replace(/\D/g, "").slice(0, maxLength);
+        
+        if (key && /\D/.test(key)) {
+          error.textContent = "Only numbers allowed";
+          this.classList.add("invalid");
+          setTimeout(() => {
+            error.textContent = "";
+            this.classList.remove("invalid");
+          }, 1000);
+        }
+      });
+    };
+
+    setupPhonePartValidation("areaCode", "areaCodeError", 3);
+    setupPhonePartValidation("phoneNumber", "phoneNumberError", 7);
+
+    // Address - no validation needed (accepts anything)
+    $("address").addEventListener("input", function() {
+      $("addressError").textContent = "";
+      this.classList.remove("invalid");
+    });
+
+    // Email validation
+    $("email").addEventListener("input", function() {
+      if (!validateEmail(this.value.trim())) {
+        $("emailError").textContent = "You have entered an invalid e-mail address";
+        this.classList.add("invalid");
       } else {
-        errorElement.innerText = "";
-        inputElement.classList.remove("invalid");
-        inputElement.classList.add("valid");
+        $("emailError").textContent = "";
+        this.classList.remove("invalid");
+      }
+    });
+
+    // Email confirmation
+    $("confirmEmail").addEventListener("input", validateEmailConfirmation);
+    $("email").addEventListener("input", validateEmailConfirmation);
+  };
+
+  // Form submission handler
+  const setupFormSubmission = function() {
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      clearNotification();
+
+      let isValid = true;
+
+      // Validate all required fields
+      const requiredFields = [
+        'firstName', 'lastName', 'email', 'confirmEmail', 
+        'address', 'city', 'state', 'zip'
+      ];
+
+      requiredFields.forEach(function(id) {
+        const field = $(id);
+        if (!field.value.trim()) {
+          $(`${id}Error`).textContent = `${field.labels[0].textContent} is required`;
+          field.classList.add("invalid");
+          isValid = false;
+        }
+      });
+
+      // Special validations
+      if (!validatePhone()) isValid = false;
+      if (!validateEmailConfirmation()) isValid = false;
+      
+      // ZIP code validation
+      if ($("zip").value.length !== 5) {
+        $("zipError").textContent = "ZIP code must be 5 digits";
+        $("zip").classList.add("invalid");
+        isValid = false;
+      }
+
+      // Meal preference
+      if (!document.querySelector('input[name="meal"]:checked')) {
+        $("mealError").textContent = "Please select a meal preference";
+        isValid = false;
+      }
+
+      if (isValid) {
+        showNotification("Form submitted successfully!", true);
+        // form.submit(); // Uncomment to enable actual submission
+      } else {
+        showNotification("Please correct the errors below.", false);
+        // Scroll to first error
+        const firstError = document.querySelector('.invalid');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     });
   };
 
-  // Add field validations
-  addFieldValidation("firstName", /^[A-Za-z]+$/, "firstNameError", "First Name is required.", "Only letters are allowed.");
-  addFieldValidation("lastName", /^[A-Za-z]+$/, "lastNameError", "Last Name is required.", "Only letters are allowed.");
-  addFieldValidation("city", /^[A-Za-z\s]+$/, "cityError", "City is required.", "Only letters are allowed.");
-  addFieldValidation("zip", /^\d+$/, "zipError", "Zip Code is required.", "Only numbers are allowed.");
-  addFieldValidation("phoneNumber", /^\d{10}$/, "phoneNumberError", "Phone Number is required.", "Exactly 10 digits are required.");
-  addFieldValidation("email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/, "emailError", "Email is required.", "Invalid email format.");
-
-  // Email confirmation validation
-  $("confirmEmail").addEventListener("input", () => {
-    const email = $("email").value.trim();
-    const confirmEmail = $("confirmEmail").value.trim();
-    const errorElement = $("confirmEmailError");
-
-    if (confirmEmail === "") {
-      errorElement.innerText = "Confirm Email is required.";
-      $("confirmEmail").classList.add("invalid");
-    } else if (email !== confirmEmail) {
-      errorElement.innerText = "Emails do not match.";
-      $("confirmEmail").classList.add("invalid");
-    } else {
-      errorElement.innerText = "";
-      $("confirmEmail").classList.remove("invalid");
-      $("confirmEmail").classList.add("valid");
-    }
-  });
-
-  // Enforce numbers-only input for the ZIP code field
-  $("zip").addEventListener("input", (event) => {
-    const inputElement = event.target;
-    const value = inputElement.value;
-
-    // Replace any non-numeric characters
-    inputElement.value = value.replace(/\D/g, "");
-
-    const errorElement = $("zipError");
-    if (value.replace(/\D/g, "").length === value.length) {
-      errorElement.innerText = "";
-      inputElement.classList.remove("invalid");
-      inputElement.classList.add("valid");
-    } else {
-      errorElement.innerText = "Zip Code can only contain numbers.";
-      inputElement.classList.add("invalid");
-      inputElement.classList.remove("valid");
-    }
-  });
-
-  // Form submission handler
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    clearNotification();
-
-    let isValid = true;
-
-    // Additional custom validations
-    if (!document.querySelector('input[name="meal"]:checked')) {
-      $("mealError").innerText = "Please select a meal preference.";
-      isValid = false;
-    } else {
-      $("mealError").innerText = "";
-    }
-
-    // Display success or error notification
-    if (isValid) {
-      showNotification("Form submitted successfully!", true);
+  // Form reset handler
+  const setupFormReset = function() {
+    form.addEventListener("reset", function() {
+      clearNotification();
+      document.querySelectorAll(".error").forEach(function(el) {
+        el.textContent = "";
+      });
+      document.querySelectorAll("input, select").forEach(function(el) {
+        el.classList.remove("invalid", "valid");
+      });
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      showNotification("Please correct the errors above.", false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  });
+    });
+  };
 
-  // Reset handler
-  form.addEventListener("reset", () => {
-    clearNotification();
-    form.querySelectorAll(".error").forEach((error) => (error.innerText = ""));
-    form.querySelectorAll("input, select, textarea").forEach((input) => input.classList.remove("invalid", "valid"));
-    document.querySelectorAll('input[name="meal"]').forEach((radio) => (radio.checked = false));
-  });
+  // Initialize all functionality
+  setupValidation();
+  setupFormSubmission();
+  setupFormReset();
 });
