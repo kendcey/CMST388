@@ -1,169 +1,111 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("userForm");
-  const notification = document.getElementById("notification");
+  const $ = (id) => document.getElementById(id); // Helper function for selecting elements
+  const form = $("userForm");
+  const notification = $("notification");
 
   // Show notification
-  function showNotification(message, isSuccess) {
+  const showNotification = (message, isSuccess) => {
     notification.textContent = message;
     notification.className = isSuccess ? "notification success" : "notification error";
     notification.style.display = "block";
-  }
+  };
 
   // Clear notification
-  function clearNotification() {
+  const clearNotification = () => {
     notification.style.display = "none";
-  }
+  };
 
-  // Validate individual fields dynamically
-  function validateField(inputElement, regex, errorElementId, baseErrorMsg, formatErrorMsg) {
-    const errorElement = document.getElementById(errorElementId);
-    const value = inputElement.value.trim();
-    let isValid = true;
+  // Real-time validation function
+  const addFieldValidation = (id, regex, errorId, baseErrorMsg, formatErrorMsg) => {
+    const inputElement = $(id);
+    const errorElement = $(errorId);
 
-    if (value === "") {
-      errorElement.innerText = baseErrorMsg;
-      inputElement.classList.remove("valid");
-      inputElement.classList.add("invalid");
-      isValid = false;
-    } else if (!regex.test(value)) {
-      errorElement.innerText = formatErrorMsg;
-      inputElement.classList.remove("valid");
-      inputElement.classList.add("invalid");
-      isValid = false;
+    if (!inputElement || !errorElement) {
+      console.error(`Element with ID "${id}" or error element "${errorId}" is missing.`);
+      return; // Gracefully exit if IDs don't match
+    }
+
+    inputElement.addEventListener("input", () => {
+      const value = inputElement.value.trim();
+      if (value === "") {
+        errorElement.innerText = baseErrorMsg;
+        inputElement.classList.remove("valid");
+        inputElement.classList.add("invalid");
+      } else if (!regex.test(value)) {
+        errorElement.innerText = formatErrorMsg;
+        inputElement.classList.remove("valid");
+        inputElement.classList.add("invalid");
+      } else {
+        errorElement.innerText = "";
+        inputElement.classList.remove("invalid");
+        inputElement.classList.add("valid");
+      }
+    });
+  };
+
+  // Add field validations
+  addFieldValidation("firstName", /^[A-Za-z]+$/, "firstNameError", "First Name is required.", "Only letters are allowed.");
+  addFieldValidation("lastName", /^[A-Za-z]+$/, "lastNameError", "Last Name is required.", "Only letters are allowed.");
+  addFieldValidation("city", /^[A-Za-z\s]+$/, "cityError", "City is required.", "Only letters are allowed.");
+  addFieldValidation("zip", /^\d+$/, "zipError", "Zip Code is required.", "Only numbers are allowed.");
+  addFieldValidation("phoneNumber", /^\d{10}$/, "phoneNumberError", "Phone Number is required.", "Exactly 10 digits are required.");
+  addFieldValidation("email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/, "emailError", "Email is required.", "Invalid email format.");
+
+  // Email confirmation validation
+  $("confirmEmail").addEventListener("input", () => {
+    const email = $("email").value.trim();
+    const confirmEmail = $("confirmEmail").value.trim();
+    const errorElement = $("confirmEmailError");
+
+    if (confirmEmail === "") {
+      errorElement.innerText = "Confirm Email is required.";
+      $("confirmEmail").classList.add("invalid");
+    } else if (email !== confirmEmail) {
+      errorElement.innerText = "Emails do not match.";
+      $("confirmEmail").classList.add("invalid");
     } else {
+      errorElement.innerText = "";
+      $("confirmEmail").classList.remove("invalid");
+      $("confirmEmail").classList.add("valid");
+    }
+  });
+
+  // Enforce numbers-only input for the ZIP code field
+  $("zip").addEventListener("input", (event) => {
+    const inputElement = event.target;
+    const value = inputElement.value;
+
+    // Replace any non-numeric characters
+    inputElement.value = value.replace(/\D/g, "");
+
+    const errorElement = $("zipError");
+    if (value.replace(/\D/g, "").length === value.length) {
       errorElement.innerText = "";
       inputElement.classList.remove("invalid");
       inputElement.classList.add("valid");
-    }
-    
-    return isValid;
-  }
-
-  // Real-time validation
-  document.getElementById("firstName").addEventListener("input", () =>
-    validateField(
-      document.getElementById("firstName"),
-      /^[A-Za-z]+$/,
-      "firstNameError",
-      "First Name is required and must contain only letters.",
-      "First Name must contain only letters."
-    )
-  );
-
-  document.getElementById("lastName").addEventListener("input", () =>
-    validateField(
-      document.getElementById("lastName"),
-      /^[A-Za-z]+$/,
-      "lastNameError",
-      "Last Name is required and must contain only letters.",
-      "Last Name must contain only letters."
-    )
-  );
-
-  document.getElementById("city").addEventListener("input", () =>
-    validateField(
-      document.getElementById("city"),
-      /^[A-Za-z\s]+$/,
-      "cityError",
-      "City is required and must contain only letters.",
-      "City must contain only letters."
-    )
-  );
-
-  document.getElementById("zip").addEventListener("input", () =>
-    validateField(
-      document.getElementById("zip"),
-      /^\d{5}$/,
-      "zipError",
-      "Zip Code is required and must be exactly 5 digits.",
-      "Zip Code must be exactly 5 digits."
-    )
-  );
-
-  document.getElementById("phoneNumber").addEventListener("input", () =>
-    validateField(
-      document.getElementById("phoneNumber"),
-      /^\d{10}$/,
-      "phoneNumberError",
-      "Phone Number is required and must be exactly 10 digits.",
-      "Phone Number must be exactly 10 digits."
-    )
-  );
-
-  document.getElementById("email").addEventListener("input", () =>
-    validateField(
-      document.getElementById("email"),
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      "emailError",
-      "Email Address is required.",
-      "Please enter a valid email address."
-    )
-  );
-
-  document.getElementById("confirmEmail").addEventListener("input", () => {
-    const emailInput = document.getElementById("email").value.trim();
-    const confirmEmailInput = document.getElementById("confirmEmail").value.trim();
-    const confirmEmailError = document.getElementById("confirmEmailError");
-    let isValid = true;
-
-    if (confirmEmailInput === "") {
-      confirmEmailError.innerText = "Confirm Email is required.";
-      document.getElementById("confirmEmail").classList.remove("valid");
-      document.getElementById("confirmEmail").classList.add("invalid");
-      isValid = false;
-    } else if (emailInput !== confirmEmailInput) {
-      confirmEmailError.innerText = "Emails do not match.";
-      document.getElementById("confirmEmail").classList.remove("valid");
-      document.getElementById("confirmEmail").classList.add("invalid");
-      isValid = false;
     } else {
-      confirmEmailError.innerText = "";
-      document.getElementById("confirmEmail").classList.remove("invalid");
-      document.getElementById("confirmEmail").classList.add("valid");
+      errorElement.innerText = "Zip Code can only contain numbers.";
+      inputElement.classList.add("invalid");
+      inputElement.classList.remove("valid");
     }
-    
-    return isValid;
   });
 
-  // Handle form submission
-  form.addEventListener("submit", event => {
+  // Form submission handler
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
     clearNotification();
 
     let isValid = true;
 
-    const fieldsToValidate = [
-      { id: "firstName", regex: /^[A-Za-z]+$/, errorMsg: "First Name is required and must contain only letters." },
-      { id: "lastName", regex: /^[A-Za-z]+$/, errorMsg: "Last Name is required and must contain only letters." },
-      { id: "city", regex: /^[A-Za-z\s]+$/, errorMsg: "City is required and must contain only letters." },
-      { id: "zip", regex: /^\d{5}$/, errorMsg: "Zip Code is required and must be exactly 5 digits." },
-      { id: "phoneNumber", regex: /^\d{10}$/, errorMsg: "Phone Number is required and must be exactly 10 digits." },
-      { id: "email", regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, errorMsg: "Valid Email Address is required." }
-    ];
-
-    fieldsToValidate.forEach(field => {
-      const inputElement = document.getElementById(field.id);
-      const errorElementId = field.id + "Error";
-      if (!validateField(inputElement, field.regex, errorElementId, field.errorMsg, field.errorMsg)) {
-        isValid = false;
-      }
-    });
-
-    // Validate email match
-    const emailInput = document.getElementById("email").value.trim();
-    const confirmEmailInput = document.getElementById("confirmEmail").value.trim();
-    if (emailInput !== confirmEmailInput) {
-      document.getElementById("confirmEmailError").innerText = "Emails do not match.";
-      document.getElementById("confirmEmail").classList.add("invalid");
-      isValid = false;
-    }
-
-    // Validate meal preference
+    // Additional custom validations
     if (!document.querySelector('input[name="meal"]:checked')) {
-      document.getElementById("mealError").textContent = "Please select a meal preference";
+      $("mealError").innerText = "Please select a meal preference.";
       isValid = false;
+    } else {
+      $("mealError").innerText = "";
     }
 
+    // Display success or error notification
     if (isValid) {
       showNotification("Form submitted successfully!", true);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -173,22 +115,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Handle form reset - FIXED
-  form.addEventListener("reset", (event) => {
-    event.preventDefault(); // Prevent default reset behavior
+  // Reset handler
+  form.addEventListener("reset", () => {
     clearNotification();
-    document.querySelectorAll(".error").forEach(errorElement => {
-      errorElement.innerText = "";
-    });
-    document.querySelectorAll("input, select, textarea").forEach(input => {
-      input.value = ""; // Clear all values
-      input.classList.remove("invalid", "valid");
-    });
-    // Clear radio buttons
-    document.querySelectorAll('input[name="meal"]').forEach(radio => {
-      radio.checked = false;
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    form.reset(); // Actually reset the form after we've done our cleanup
+    form.querySelectorAll(".error").forEach((error) => (error.innerText = ""));
+    form.querySelectorAll("input, select, textarea").forEach((input) => input.classList.remove("invalid", "valid"));
+    document.querySelectorAll('input[name="meal"]').forEach((radio) => (radio.checked = false));
   });
 });

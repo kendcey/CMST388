@@ -19,67 +19,81 @@
       
       <form id="userForm" novalidate>
         <fieldset>
-          <legend>Personal Information</legend>
           <div class="form-group">
             <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" required>
-            <div class="error" id="firstNameError"></div>
+            <div class="input-wrapper">
+              <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" required>
+              <div class="error" id="firstNameError"></div>
+            </div>
           </div>
           <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" required>
-            <div class="error" id="lastNameError"></div>
+            <div class="input-wrapper">
+              <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" required>
+              <div class="error" id="lastNameError"></div>
+            </div>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Address</legend>
           <div class="form-group">
             <label for="address">Street Address</label>
-            <input type="text" id="address" name="address" placeholder="Street Address" required>
-            <div class="error" id="addressError"></div>
+            <div class="input-wrapper">
+              <input type="text" id="address" name="address" placeholder="Street Address" required>
+              <div class="error" id="addressError"></div>
+            </div>
           </div>
           <div class="form-group">
             <label for="city">City</label>
-            <input type="text" id="city" name="city" placeholder="City" required>
-            <div class="error" id="cityError"></div>
+            <div class="input-wrapper">
+              <input type="text" id="city" name="city" placeholder="City" required>
+              <div class="error" id="cityError"></div>
+            </div>
           </div>
           <div class="form-group">
             <label for="zip">Zip Code</label>
-            <input type="text" id="zip" name="zip" placeholder="Zip Code" required>
-            <div class="error" id="zipError"></div>
+            <div class="input-wrapper">
+              <input type="text" id="zip" name="zip" placeholder="Zip Code" required>
+              <div class="error" id="zipError"></div>
+            </div>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Contact Information</legend>
           <div class="form-group">
             <label for="phoneNumber">Phone Number</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" required>
-            <div class="error" id="phoneNumberError"></div>
+            <div class="input-wrapper">
+              <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" required>
+              <div class="error" id="phoneNumberError"></div>
+            </div>
           </div>
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="example@example.com" required>
-            <div class="error" id="emailError"></div>
+            <div class="input-wrapper">
+              <input type="email" id="email" name="email" placeholder="example@example.com" required>
+              <div class="error" id="emailError"></div>
+            </div>
           </div>
           <div class="form-group">
             <label for="confirmEmail">Confirm Email</label>
-            <input type="email" id="confirmEmail" name="confirmEmail" placeholder="example@example.com" required>
-            <div class="error" id="confirmEmailError"></div>
+            <div class="input-wrapper">
+              <input type="email" id="confirmEmail" name="confirmEmail" placeholder="example@example.com" required>
+              <div class="error" id="confirmEmailError"></div>
+            </div>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Preferences</legend>
           <div class="form-group">
             <label>Meal Preference</label>
-            <div>
-              <label><input type="radio" name="meal" value="Vegan"> Vegan</label>
-              <label><input type="radio" name="meal" value="Vegetarian"> Vegetarian</label>
-              <label><input type="radio" name="meal" value="Non-Vegetarian"> Non-Vegetarian</label>
+            <div class="input-wrapper">
+              <div>
+                <label><input type="radio" name="meal" value="Vegan"> Vegan</label>
+                <label><input type="radio" name="meal" value="Vegetarian"> Vegetarian</label>
+                <label><input type="radio" name="meal" value="Non-Vegetarian"> Non-Vegetarian</label>
+              </div>
+              <div class="error" id="mealError"></div>
             </div>
-            <div class="error" id="mealError"></div>
           </div>
         </fieldset>
 
@@ -91,6 +105,6 @@
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
