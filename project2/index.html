@@ -6,6 +6,7 @@
   <title>Registration Form</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="page-wrapper">
@@ -161,17 +162,75 @@
 
         <fieldset>
           <div class="form-group">
-            <label>Meal Preference</label>
+            <label>
+              Meal Preference
+              <span class="subtext">(select one)</span>
+            </label>
             <div class="input-wrapper">
-              <div>
-                <label><input type="radio" name="meal" value="Vegan"> Vegan</label>
-                <label><input type="radio" name="meal" value="Vegetarian"> Vegetarian</label>
-                <label><input type="radio" name="meal" value="Non-Vegetarian"> Non-Vegetarian</label>
+              <div class="radio-group-column">
+                <label class="radio-option">
+                  <input type="radio" name="meal" value="Vegan">
+                  <span class="custom-radio"></span>
+                  Vegan
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="meal" value="Vegetarian">
+                  <span class="custom-radio"></span>
+                  Vegetarian
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="meal" value="Non-Vegetarian">
+                  <span class="custom-radio"></span>
+                  Non-Vegetarian
+                </label>
               </div>
               <div class="error" id="mealError"></div>
             </div>
           </div>
         </fieldset>
+
+        <fieldset>
+          <div class="form-group">
+            <label>
+              Contact Method
+              <span class="subtext">(select 2 or more)</span>
+            </label>
+            <div class="input-wrapper contact-methods">
+              <div class="contact-group">
+                <label>
+                  <input type="checkbox" name="contactMethod" value="Phone">
+                  Phone
+                </label>
+                <label>
+                  <input type="checkbox" name="contactMethod" value="Email">
+                  Email
+                </label>
+              </div>
+              <div class="contact-group">
+                <label>
+                  <input type="checkbox" name="contactMethod" value="Mail">
+                  Mail
+                </label>
+                <label>
+                  <input type="checkbox" name="contactMethod" value="LinkedIn">
+                  LinkedIn
+                </label>
+              </div>
+              <div class="error" id="contactMethodError"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="comments">
+              Comments
+              <span class="subtext">(optional)</span>
+            </label>
+            <div class="input-wrapper">
+              <textarea id="comments" name="comments" placeholder="Enter any additional comments" maxlength="250"></textarea>
+              <div class="error" id="commentsError"></div>
+            </div>
+          </div>
+        </fieldset>
+        
 
         <div class="form-actions">
           <button type="submit">Submit</button>
