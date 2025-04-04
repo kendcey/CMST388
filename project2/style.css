@@ -7,6 +7,7 @@
   --text-color: #000000;
   --placeholder-color: #999;
   --font-main: 'Montserrat', sans-serif;
+  --font-code: 'Source Code Pro', monospace;
   --page-padding: 20px;
   --max-width: 700px;
   --input-padding: 12px;
@@ -55,25 +56,25 @@ body {
 
 .notification {
   display: none;
-  width: calc(100% + 2 * var(--form-side-padding)); /* Stretch beyond container */
-  margin-left: calc(-1 * var(--form-side-padding)); /* Pull to left edge */
-  padding: 15px var(--form-side-padding); /* Maintain side padding for text */
+  width: calc(100% + 2 * var(--form-side-padding));
+  margin-left: calc(-1 * var(--form-side-padding));
+  padding: 15px var(--form-side-padding);
   text-align: center;
   font-weight: bold;
   cursor: default;
   user-select: none;
   box-sizing: border-box;
   margin-bottom: 30px;
+}
 
-  /* Your existing colors */
-  &.error {
-    background-color: var(--error-color);
-    color: #ffffff;
-  }
-  &.success {
-    background-color: var(--success-color);
-    color: #ffffff;
-  }
+.notification.error {
+  background-color: var(--error-color);
+  color: #ffffff;
+}
+
+.notification.success {
+  background-color: var(--success-color);
+  color: #ffffff;
 }
 
 .form-container {
@@ -103,6 +104,72 @@ label {
   color: var(--text-color);
   font-weight: bold;
   margin-top: 12px;
+  margin-bottom: 5px; /* Added to prevent touching inputs */
+}
+
+label .subtext {
+  display: block;
+  font-size: 0.85em;
+  color: var(--placeholder-color);
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.radio-group-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  font-size: 14px;
+}
+
+.custom-radio {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.radio-option input:checked ~ .custom-radio {
+  border-color: var(--success-color);
+  background-color: var(--success-color);
+}
+
+#mealError {
+  color: var(--error-color);
+  font-size: 14px;
+  margin-top: 5px;
+  min-height: 18px;
+}
+
+.radio-group-column.invalid {
+  border-radius: 8px;
+  padding: 5px;
+  background: #f4433620;
 }
 
 .input-wrapper {
@@ -118,6 +185,7 @@ label {
   display: inline-flex;
   align-items: center;
   margin-right: 15px;
+  margin-bottom: 0; /* Reset for inline labels */
 }
 
 input, select, textarea {
@@ -125,9 +193,10 @@ input, select, textarea {
   padding: var(--input-padding);
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-family: var(--font-main);
+  font-family: var(--font-code);
   transition: all 0.3s ease;
   box-sizing: border-box;
+  margin-top: 4px; /* Added to prevent touching labels */
 }
 
 input:focus, select:focus {
@@ -175,35 +244,99 @@ select option {
   margin-top: 30px;
 }
 
-
-/* Phone Number Container */
+/* Phone Input - Stays horizontal at all sizes */
 .phone-container {
   display: flex;
-  flex-direction: row; /* Ensure horizontal layout */
-  gap: 10px; /* Space between fields */
-  align-items: flex-start; /* Align at the top */
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
 }
 
-/* Area Code (left side - smaller) */
 .phone-part:first-child {
-  flex: 0 0 25%; /* Smaller fixed width */
+  flex: 0 0 30%;
 }
 
-/* Phone Number (right side - larger) */
 .phone-part:last-child {
-  flex: 1; /* Takes remaining space */
+  flex: 1;
 }
 
-/* Input fields */
 .phone-container input {
-  width: 100%; /* Full width of container */
-  box-sizing: border-box; /* Include padding in width */
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px; /* Consistent with other inputs */
 }
 
-/* Error messages */
 .phone-container .error {
   display: block;
   margin-top: 5px;
+}
+
+/* Contact Method - Fixed for resizing */
+.contact-methods {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  min-width: 200px;
+}
+
+.contact-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 8px 10px;
+  align-items: center;
+  padding: 5px 0; /* Adds extra space above and below the grid content */
+  font-size: 14px;
+}
+
+.contact-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  font-weight: normal;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-group input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 10px;
+  height: 16px;
+  border: 2px solid #666;
+  border-radius: 3px;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.contact-group input[type="checkbox"]:checked {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.contact-group input[type="checkbox"]:checked::after {
+  position: absolute;
+  color: white;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 150px;
+  margin-top: 4px; /* Consistent with other inputs */
+}
+
+textarea.invalid {
+  border-color: var(--error-color);
 }
 
 button {
@@ -236,6 +369,48 @@ button[type="reset"]:hover {
   transform: scale(1.05);
 }
 
-input[type="radio"] {
-  margin-right: 8px;
+@media (max-width: 600px) {
+  .form-group {
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 12px; /* Reduced for better spacing */
+  }
+
+  label {
+    width: 100%;
+    margin-bottom: 6px; /* Ensure gap above inputs */
+    padding-right: 0;
+  }
+
+  .input-wrapper {
+    width: 100%;
+  }
+
+  /* Keep phone fields horizontal */
+  .phone-container {
+    flex-direction: row !important;
+    gap: 10px !important;
+  }
+
+  .phone-part:first-child {
+    flex: 0 0 30% !important;
+  }
+
+  .phone-part:last-child {
+    flex: 1 !important;
+  }
+
+  /* Contact method adjustments */
+  .contact-methods {
+    width: 100%;
+  }
+
+  .contact-group {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .contact-group label {
+    white-space: normal;
+  }
 }
