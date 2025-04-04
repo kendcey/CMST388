@@ -263,6 +263,29 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   };
 
+  // Validate Contact Method (at least 2 selections)
+const validateContactMethods = function() {
+  const selected = document.querySelectorAll('input[name="contactMethod"]:checked');
+  const error = $("contactMethodError");
+
+  if (selected.length < 2) {
+    error.textContent = "Please select at least two contact methods";
+    return false;
+  } else {
+    error.textContent = "";
+    return true;
+  }
+};
+
+// Ensure Contact Method Validation on Form Submission
+form.addEventListener("submit", function(event) {
+  if (!validateContactMethods()) {
+    event.preventDefault();
+    showNotification("Please correct the errors below.", false);
+  }
+});
+
+
   // Initialize all functionality
   setupValidation();
   setupFormSubmission();
